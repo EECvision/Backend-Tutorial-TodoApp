@@ -1,0 +1,119 @@
+{
+    "info": {
+        "_postman_id": "todo-api-collection",
+        "name": "Todo API",
+        "description": "A simple Express.js Todo API with CRUD operations",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get All Todos",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8080/todos",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "todos"
+                    ]
+                },
+                "description": "Retrieve a list of all todos"
+            },
+            "response": []
+        },
+        {
+            "name": "Create Todo",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"task\": \"Learn Postman\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8080/todos",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "todos"
+                    ]
+                },
+                "description": "Create a new todo item"
+            },
+            "response": []
+        },
+        {
+            "name": "Update Todo",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"task\": \"Learn Postman - Updated\",\n    \"completed\": true\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8080/todos/1",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "todos",
+                        "1"
+                    ]
+                },
+                "description": "Update an existing todo by ID"
+            },
+            "response": []
+        },
+        {
+            "name": "Delete Todo",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8080/todos/1",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "todos",
+                        "1"
+                    ]
+                },
+                "description": "Delete a todo by ID"
+            },
+            "response": []
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8080",
+            "type": "string"
+        }
+    ]
+}
