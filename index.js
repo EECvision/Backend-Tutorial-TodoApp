@@ -21,6 +21,18 @@ app.use(express.json());
 const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',')
     : ['http://example.com', 'http://localhost:3000'];
+
+// Add current domain (for Swagger UI)
+// Add current domain (for Swagger UI)
+let currentDomain = process.env.API_URL || `http://localhost:${process.env.PORT || 8080}`;
+if (!currentDomain.startsWith('http')) {
+    currentDomain = `https://${currentDomain}`;
+}
+
+if (!allowedOrigins.includes(currentDomain)) {
+    allowedOrigins.push(currentDomain);
+}
+
 const corsOptions = {
     origin: allowedOrigins,
     optionsSuccessStatus: 200
