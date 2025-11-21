@@ -3,8 +3,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+
 const app = express();
 const port = process.env.PORT || 8080;
 const db = require('./db');
@@ -72,10 +71,12 @@ app.get('/', (req, res) => {
  *                     type: string
  *                   completed:
  *                     type: boolean
+ *                   priority:
+ *                     type: integer
  */
 app.get('/todos', async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM todos ORDER BY id ASC');
+        const result = await db.query('SELECT * FROM todos ORDER BY priority DESC, id ASC');
         res.json(result.rows);
     } catch (err) {
         console.error(err);
@@ -97,16 +98,18 @@ app.get('/todos', async (req, res) => {
  *             properties:
  *               task:
  *                 type: string
+ *               priority:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Created
  */
 app.post('/todos', async (req, res) => {
-    const { task } = req.body;
+    const { task, priority = 1 } = req.body;
     try {
         const result = await db.query(
-            'INSERT INTO todos (task) VALUES ($1) RETURNING *',
-            [task]
+            'INSERT INTO todos (task, priority) VALUES ($1, $2) RETURNING *',
+            [task, priority]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -137,6 +140,8 @@ app.post('/todos', async (req, res) => {
  *                 type: string
  *               completed:
  *                 type: boolean
+ *               priority:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Updated
@@ -145,12 +150,12 @@ app.post('/todos', async (req, res) => {
  */
 app.put('/todos/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    const { task, completed } = req.body;
+    const { task, completed, priority } = req.body;
 
     try {
         const result = await db.query(
-            'UPDATE todos SET task = COALESCE($1, task), completed = COALESCE($2, completed) WHERE id = $3 RETURNING *',
-            [task, completed, id]
+            'UPDATE todos SET task = COALESCE($1, task), completed = COALESCE($2, completed), priority = COALESCE($3, priority) WHERE id = $4 RETURNING *',
+            [task, completed, priority, id]
         );
 
         if (result.rows.length === 0) {
@@ -195,22 +200,9 @@ app.delete('/todos/:id', async (req, res) => {
     }
 });
 
-// Initialize DB and start server
-async function startServer() {
-    try {
-        const schemaPath = path.join(__dirname, 'db', 'schema.sql');
-        const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+// Start server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
 
-        await db.query(schemaSql);
-        console.log('Database initialized successfully');
 
-        app.listen(port, () => {
-            console.log(`Server running at http://localhost:${port}`);
-        });
-    } catch (err) {
-        console.error('Failed to start server:', err);
-        process.exit(1);
-    }
-}
-
-startServer();
