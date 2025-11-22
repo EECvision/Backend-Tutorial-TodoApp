@@ -51,6 +51,6 @@ app.get('/', (req, res) => {
 app.use('/', routes);
 
 // Start server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${port}`);
 });
