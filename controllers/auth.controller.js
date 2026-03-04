@@ -84,4 +84,26 @@ async function login(req, res) {
     }
 }
 
-module.exports = { signup, adminSignup, login };
+/**
+ * Refresh an access token
+ */
+async function refresh(req, res) {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return respond.error(res, { status: 400, message: 'Refresh token is required' });
+    }
+
+    try {
+        const data = authService.refreshAccessToken(refreshToken);
+        return respond.success(res, {
+            status: 200,
+            message: 'Access token refreshed',
+            data
+        });
+    } catch (err) {
+        return respond.error(res, { status: 401, message: 'Invalid or expired refresh token' });
+    }
+}
+
+module.exports = { signup, adminSignup, login, refresh };

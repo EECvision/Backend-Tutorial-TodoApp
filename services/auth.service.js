@@ -49,7 +49,21 @@ async function authenticateUser(username, password) {
     };
 }
 
+/**
+ * Refresh an access token using a valid refresh token
+ * @param {string} refreshToken - The refresh token
+ * @returns {Object} Object containing a new accessToken
+ * @throws {Error} If the refresh token is invalid or expired
+ */
+function refreshAccessToken(refreshToken) {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+    const payload = { id: decoded.id, username: decoded.username, role: decoded.role };
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+    return { accessToken };
+}
+
 module.exports = {
     createUser,
-    authenticateUser
+    authenticateUser,
+    refreshAccessToken
 };
