@@ -12,7 +12,7 @@ const swaggerOptions = {
             {
                 url: (process.env.API_URL && !process.env.API_URL.startsWith('http'))
                     ? `https://${process.env.API_URL}`
-                    : (process.env.API_URL || `http://localhost:${process.env.PORT || 8080}`),
+                    : (process.env.API_URL || '/'),
                 description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
             }
         ],
