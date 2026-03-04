@@ -1,4 +1,5 @@
 const todoService = require('../services/todo.service');
+const respond = require('../utils/response');
 
 /**
  * Get all todos for the authenticated user
@@ -6,10 +7,10 @@ const todoService = require('../services/todo.service');
 async function getTodos(req, res) {
     try {
         const todos = await todoService.getUserTodos(req.user.id);
-        res.json(todos);
+        return respond.success(res, { message: 'Todos retrieved', data: todos });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
@@ -18,12 +19,17 @@ async function getTodos(req, res) {
  */
 async function createTodo(req, res) {
     const { task, priority = 1 } = req.body;
+
+    if (!task) {
+        return respond.error(res, { status: 400, message: 'Task is required' });
+    }
+
     try {
         const todo = await todoService.createTodo(req.user.id, task, priority);
-        res.status(201).json(todo);
+        return respond.success(res, { status: 201, message: 'Todo created', data: todo });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
@@ -37,12 +43,12 @@ async function updateTodo(req, res) {
     try {
         const todo = await todoService.updateTodo(req.user.id, id, { task, completed, priority });
         if (!todo) {
-            return res.status(404).json({ message: 'Todo not found' });
+            return respond.error(res, { status: 404, message: 'Todo not found' });
         }
-        res.json(todo);
+        return respond.success(res, { message: 'Todo updated', data: todo });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
@@ -54,18 +60,13 @@ async function deleteTodo(req, res) {
     try {
         const todo = await todoService.deleteTodo(req.user.id, id);
         if (!todo) {
-            return res.status(404).json({ message: 'Todo not found' });
+            return respond.error(res, { status: 404, message: 'Todo not found' });
         }
-        res.json(todo);
+        return respond.success(res, { message: 'Todo deleted', data: todo });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
-module.exports = {
-    getTodos,
-    createTodo,
-    updateTodo,
-    deleteTodo
-};
+module.exports = { getTodos, createTodo, updateTodo, deleteTodo };

@@ -39,41 +39,54 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of all todos with user information",
+            "description": "All todos retrieved",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "task": {
-                        "type": "string",
-                        "example": "Buy groceries"
-                      },
-                      "completed": {
-                        "type": "boolean",
-                        "example": false
-                      },
-                      "priority": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "user_id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "username": {
-                        "type": "string",
-                        "example": "johndoe"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All todos retrieved"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "task": {
+                            "type": "string",
+                            "example": "Buy groceries"
+                          },
+                          "completed": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "priority": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "user_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "username": {
+                            "type": "string",
+                            "example": "johndoe"
+                          }
+                        }
                       }
                     }
                   }
@@ -82,10 +95,10 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           },
           "403": {
-            "description": "Forbidden - User does not have admin role"
+            "description": "Forbidden - Admin role required"
           },
           "500": {
             "description": "Internal server error"
@@ -126,19 +139,41 @@
         },
         "responses": {
           "201": {
-            "description": "User created successfully",
+            "description": "Account created successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
+                    "success": {
+                      "type": "boolean",
+                      "example": true
                     },
-                    "username": {
+                    "message": {
                       "type": "string",
-                      "example": "johndoe"
+                      "example": "Account created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "username": {
+                              "type": "string",
+                              "example": "johndoe"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "user"
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -146,7 +181,24 @@
             }
           },
           "400": {
-            "description": "Username already exists"
+            "description": "Validation error or username already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Username already exists"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error"
@@ -199,23 +251,41 @@
         },
         "responses": {
           "201": {
-            "description": "Admin user created successfully",
+            "description": "Admin account created successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
+                    "success": {
+                      "type": "boolean",
+                      "example": true
                     },
-                    "username": {
+                    "message": {
                       "type": "string",
-                      "example": "admin_user"
+                      "example": "Admin account created successfully"
                     },
-                    "role": {
-                      "type": "string",
-                      "example": "admin"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "username": {
+                              "type": "string",
+                              "example": "admin_user"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "admin"
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -223,7 +293,24 @@
             }
           },
           "400": {
-            "description": "Username already exists"
+            "description": "Validation error or username already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Username already exists"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "Invalid admin secret"
@@ -273,9 +360,63 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "token": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
                       "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      "example": "Login successful"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "username": {
+                              "type": "string",
+                              "example": "johndoe"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "user"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Username and password are required"
                     }
                   }
                 }
@@ -283,7 +424,24 @@
             }
           },
           "401": {
-            "description": "Invalid credentials"
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid username or password"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Internal server error"
@@ -304,37 +462,50 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of todos",
+            "description": "Todos retrieved",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "task": {
-                        "type": "string",
-                        "example": "Buy groceries"
-                      },
-                      "completed": {
-                        "type": "boolean",
-                        "example": false
-                      },
-                      "priority": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "user_id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "created_at": {
-                        "type": "string",
-                        "format": "date-time"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Todos retrieved"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "task": {
+                            "type": "string",
+                            "example": "Buy groceries"
+                          },
+                          "completed": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "priority": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "user_id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
                       }
                     }
                   }
@@ -343,7 +514,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal server error"
@@ -385,43 +556,59 @@
         },
         "responses": {
           "201": {
-            "description": "Todo created successfully",
+            "description": "Todo created",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "task": {
-                      "type": "string",
-                      "example": "Buy groceries"
-                    },
-                    "completed": {
+                    "success": {
                       "type": "boolean",
-                      "example": false
+                      "example": true
                     },
-                    "priority": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "user_id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "created_at": {
+                    "message": {
                       "type": "string",
-                      "format": "date-time"
+                      "example": "Todo created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "task": {
+                          "type": "string",
+                          "example": "Buy groceries"
+                        },
+                        "completed": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "priority": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "user_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
                     }
                   }
                 }
               }
             }
           },
+          "400": {
+            "description": "Task is required"
+          },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal server error"
@@ -478,35 +665,48 @@
         },
         "responses": {
           "200": {
-            "description": "Todo updated successfully",
+            "description": "Todo updated",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "task": {
-                      "type": "string",
-                      "example": "Buy groceries and cook dinner"
-                    },
-                    "completed": {
+                    "success": {
                       "type": "boolean",
                       "example": true
                     },
-                    "priority": {
-                      "type": "integer",
-                      "example": 2
-                    },
-                    "user_id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "created_at": {
+                    "message": {
                       "type": "string",
-                      "format": "date-time"
+                      "example": "Todo updated"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "task": {
+                          "type": "string",
+                          "example": "Buy groceries and cook dinner"
+                        },
+                        "completed": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "priority": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "user_id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
                     }
                   }
                 }
@@ -514,7 +714,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Todo not found"
@@ -548,35 +748,36 @@
         ],
         "responses": {
           "200": {
-            "description": "Todo deleted successfully",
+            "description": "Todo deleted",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "task": {
-                      "type": "string",
-                      "example": "Buy groceries"
-                    },
-                    "completed": {
+                    "success": {
                       "type": "boolean",
-                      "example": false
+                      "example": true
                     },
-                    "priority": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "user_id": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "created_at": {
+                    "message": {
                       "type": "string",
-                      "format": "date-time"
+                      "example": "Todo deleted"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "task": {
+                          "type": "string",
+                          "example": "Buy groceries"
+                        },
+                        "completed": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
                     }
                   }
                 }
@@ -584,7 +785,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized - Invalid or missing token"
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Todo not found"

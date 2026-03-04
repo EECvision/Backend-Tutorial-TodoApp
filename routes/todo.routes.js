@@ -14,34 +14,43 @@ const auth = require('../middleware/auth');
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: A list of todos
+ *         description: Todos retrieved
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   task:
- *                     type: string
- *                     example: Buy groceries
- *                   completed:
- *                     type: boolean
- *                     example: false
- *                   priority:
- *                     type: integer
- *                     example: 1
- *                   user_id:
- *                     type: integer
- *                     example: 1
- *                   created_at:
- *                     type: string
- *                     format: date-time
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Todos retrieved
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       task:
+ *                         type: string
+ *                         example: Buy groceries
+ *                       completed:
+ *                         type: boolean
+ *                         example: false
+ *                       priority:
+ *                         type: integer
+ *                         example: 1
+ *                       user_id:
+ *                         type: integer
+ *                         example: 1
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
  *       401:
- *         description: Unauthorized - Invalid or missing token
+ *         description: Unauthorized
  *       500:
  *         description: Internal server error
  */
@@ -73,32 +82,43 @@ router.get('/', auth, todoController.getTodos);
  *                 example: 1
  *     responses:
  *       201:
- *         description: Todo created successfully
+ *         description: Todo created
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                   example: 1
- *                 task:
- *                   type: string
- *                   example: Buy groceries
- *                 completed:
+ *                 success:
  *                   type: boolean
- *                   example: false
- *                 priority:
- *                   type: integer
- *                   example: 1
- *                 user_id:
- *                   type: integer
- *                   example: 1
- *                 created_at:
+ *                   example: true
+ *                 message:
  *                   type: string
- *                   format: date-time
+ *                   example: Todo created
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     task:
+ *                       type: string
+ *                       example: Buy groceries
+ *                     completed:
+ *                       type: boolean
+ *                       example: false
+ *                     priority:
+ *                       type: integer
+ *                       example: 1
+ *                     user_id:
+ *                       type: integer
+ *                       example: 1
+ *                     created_at:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: Task is required
  *       401:
- *         description: Unauthorized - Invalid or missing token
+ *         description: Unauthorized
  *       500:
  *         description: Internal server error
  */
@@ -139,32 +159,41 @@ router.post('/', auth, todoController.createTodo);
  *                 example: 2
  *     responses:
  *       200:
- *         description: Todo updated successfully
+ *         description: Todo updated
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                   example: 1
- *                 task:
- *                   type: string
- *                   example: Buy groceries and cook dinner
- *                 completed:
+ *                 success:
  *                   type: boolean
  *                   example: true
- *                 priority:
- *                   type: integer
- *                   example: 2
- *                 user_id:
- *                   type: integer
- *                   example: 1
- *                 created_at:
+ *                 message:
  *                   type: string
- *                   format: date-time
+ *                   example: Todo updated
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     task:
+ *                       type: string
+ *                       example: Buy groceries and cook dinner
+ *                     completed:
+ *                       type: boolean
+ *                       example: true
+ *                     priority:
+ *                       type: integer
+ *                       example: 2
+ *                     user_id:
+ *                       type: integer
+ *                       example: 1
+ *                     created_at:
+ *                       type: string
+ *                       format: date-time
  *       401:
- *         description: Unauthorized - Invalid or missing token
+ *         description: Unauthorized
  *       404:
  *         description: Todo not found
  *       500:
@@ -191,32 +220,32 @@ router.put('/:id', auth, todoController.updateTodo);
  *         example: 1
  *     responses:
  *       200:
- *         description: Todo deleted successfully
+ *         description: Todo deleted
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                   example: 1
- *                 task:
- *                   type: string
- *                   example: Buy groceries
- *                 completed:
+ *                 success:
  *                   type: boolean
- *                   example: false
- *                 priority:
- *                   type: integer
- *                   example: 1
- *                 user_id:
- *                   type: integer
- *                   example: 1
- *                 created_at:
+ *                   example: true
+ *                 message:
  *                   type: string
- *                   format: date-time
+ *                   example: Todo deleted
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     task:
+ *                       type: string
+ *                       example: Buy groceries
+ *                     completed:
+ *                       type: boolean
+ *                       example: false
  *       401:
- *         description: Unauthorized - Invalid or missing token
+ *         description: Unauthorized
  *       404:
  *         description: Todo not found
  *       500:

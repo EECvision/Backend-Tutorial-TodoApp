@@ -2,6 +2,10 @@ const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const ACCESS_TOKEN_EXPIRY = '15m';
+const REFRESH_TOKEN_EXPIRY = '7d';
+
 /**
  * Create a new user in the database
  * @param {string} username - Username
@@ -19,10 +23,10 @@ async function createUser(username, password, role = 'user') {
 }
 
 /**
- * Authenticate a user and generate JWT token
+ * Authenticate a user and generate access + refresh tokens
  * @param {string} username - Username
  * @param {string} password - Plain text password
- * @returns {Promise<Object>} Object containing JWT token
+ * @returns {Promise<Object>} Object containing accessToken, refreshToken, and user
  * @throws {Error} If credentials are invalid
  */
 async function authenticateUser(username, password) {
@@ -33,13 +37,16 @@ async function authenticateUser(username, password) {
         throw new Error('Invalid credentials');
     }
 
-    const token = jwt.sign(
-        { id: user.id, username: user.username, role: user.role },
-        process.env.JWT_SECRET || 'your_jwt_secret',
-        { expiresIn: '1h' }
-    );
+    const payload = { id: user.id, username: user.username, role: user.role };
 
-    return { token };
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY });
+
+    return {
+        accessToken,
+        refreshToken,
+        user: { id: user.id, username: user.username, role: user.role }
+    };
 }
 
 module.exports = {

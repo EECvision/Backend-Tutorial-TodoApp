@@ -23,7 +23,6 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
     : ['http://example.com', 'http://localhost:3000'];
 
 // Add current domain (for Swagger UI)
-// Add current domain (for Swagger UI)
 let currentDomain = process.env.API_URL || `http://localhost:${process.env.PORT || 8080}`;
 if (!currentDomain.startsWith('http')) {
     currentDomain = `https://${currentDomain}`;

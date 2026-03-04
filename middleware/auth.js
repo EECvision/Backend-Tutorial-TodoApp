@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
+const respond = require('../utils/response');
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
+        return respond.error(res, { status: 401, message: 'Access denied. No token provided.' });
     }
 
     try {
@@ -13,6 +14,6 @@ module.exports = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        res.status(400).json({ message: 'Invalid token.' });
+        respond.error(res, { status: 401, message: 'Invalid or expired token.' });
     }
 };

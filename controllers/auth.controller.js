@@ -1,4 +1,5 @@
 const authService = require('../services/auth.service');
+const respond = require('../utils/response');
 
 /**
  * Handle user signup
@@ -7,18 +8,22 @@ async function signup(req, res) {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+        return respond.error(res, { status: 400, message: 'Username and password are required' });
     }
 
     try {
         const user = await authService.createUser(username, password, 'user');
-        res.status(201).json(user);
+        return respond.success(res, {
+            status: 201,
+            message: 'Account created successfully',
+            data: { user }
+        });
     } catch (err) {
         if (err.code === '23505') {
-            return res.status(400).json({ message: 'Username already exists' });
+            return respond.error(res, { status: 400, message: 'Username already exists' });
         }
         console.error(err);
-        res.status(500).json({ error: 'Internal server error', details: err.message });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
@@ -30,22 +35,26 @@ async function adminSignup(req, res) {
     const adminSecret = req.headers['x-admin-secret'];
 
     if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+        return respond.error(res, { status: 400, message: 'Username and password are required' });
     }
 
     if (adminSecret !== process.env.ADMIN_SECRET) {
-        return res.status(403).json({ message: 'Invalid admin secret' });
+        return respond.error(res, { status: 403, message: 'Invalid admin secret' });
     }
 
     try {
         const user = await authService.createUser(username, password, 'admin');
-        res.status(201).json(user);
+        return respond.success(res, {
+            status: 201,
+            message: 'Admin account created successfully',
+            data: { user }
+        });
     } catch (err) {
         if (err.code === '23505') {
-            return res.status(400).json({ message: 'Username already exists' });
+            return respond.error(res, { status: 400, message: 'Username already exists' });
         }
         console.error(err);
-        res.status(500).json({ error: 'Internal server error', details: err.message });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
@@ -56,23 +65,23 @@ async function login(req, res) {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+        return respond.error(res, { status: 400, message: 'Username and password are required' });
     }
 
     try {
-        const result = await authService.authenticateUser(username, password);
-        res.json(result);
+        const data = await authService.authenticateUser(username, password);
+        return respond.success(res, {
+            status: 200,
+            message: 'Login successful',
+            data
+        });
     } catch (err) {
         if (err.message === 'Invalid credentials') {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return respond.error(res, { status: 401, message: 'Invalid username or password' });
         }
         console.error(err);
-        res.status(500).json({ error: 'Internal server error', details: err.message });
+        return respond.error(res, { status: 500, message: 'Internal server error' });
     }
 }
 
-module.exports = {
-    signup,
-    adminSignup,
-    login
-};
+module.exports = { signup, adminSignup, login };
