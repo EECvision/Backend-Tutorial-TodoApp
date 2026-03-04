@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "migrate:create": "node -r dotenv/config ./node_modules/node-pg-migrate/bin/node-pg-migrate create",
     "migrate:up": "node -r dotenv/config ./node_modules/node-pg-migrate/bin/node-pg-migrate up",
-    "migrate:down": "node -r dotenv/config ./node_modules/node-pg-migrate/bin/node-pg-migrate down"
+    "migrate:down": "node -r dotenv/config ./node_modules/node-pg-migrate/bin/node-pg-migrate down",
+    "generate-docs": "node scripts/generate-openapi.js"
   },
   "keywords": [],
   "author": "",

@@ -39,8 +39,19 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Serve OpenAPI JSON
+app.get('/openapi.json', (req, res) => {
+    res.json(swaggerSpec);
+});
+
+// Swagger UI configuration
+const swaggerUiOptions = {
+    swaggerOptions: {
+        url: '/openapi.json'
+    }
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, swaggerUiOptions));
 
 // Root route
 app.get('/', (req, res) => {
