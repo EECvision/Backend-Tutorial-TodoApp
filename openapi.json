@@ -286,6 +286,48 @@
         }
       }
     },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "description": "Informs the server of logout. Note that for stateless JWTs, the client must also delete the tokens locally.",
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Logout successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/todos": {
       "get": {
         "summary": "Retrieve a list of todos for the authenticated user",

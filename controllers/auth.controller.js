@@ -76,4 +76,18 @@ async function refresh(req, res) {
     }
 }
 
-module.exports = { signup, login, refresh };
+/**
+ * Logout a user
+ * Note: Since JWTs are stateless, actual logout is handled by the client
+ * deleting the tokens. This endpoint is provided for API completeness and
+ * potential future token blacklisting/revocation.
+ */
+async function logout(req, res) {
+    // In a stateful token architecture, you would invalidate the refresh token in the DB here.
+    return respond.success(res, {
+        status: 200,
+        message: 'Logout successful'
+    });
+}
+
+module.exports = { signup, login, refresh, logout };
