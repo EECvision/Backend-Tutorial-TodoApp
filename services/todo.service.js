@@ -58,21 +58,10 @@ async function deleteTodo(userId, todoId) {
     return result.rows[0] || null;
 }
 
-/**
- * Get all todos from all users (admin only)
- * @returns {Promise<Array>} Array of todo objects with username
- */
-async function getAllTodos() {
-    const result = await db.query(
-        'SELECT t.*, u.username FROM todos t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC'
-    );
-    return result.rows;
-}
 
 module.exports = {
     getUserTodos,
     createTodo,
     updateTodo,
-    deleteTodo,
-    getAllTodos
+    deleteTodo
 };

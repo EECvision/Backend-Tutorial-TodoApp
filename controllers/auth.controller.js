@@ -27,36 +27,6 @@ async function signup(req, res) {
     }
 }
 
-/**
- * Handle admin signup
- */
-async function adminSignup(req, res) {
-    const { username, password } = req.body;
-    const adminSecret = req.headers['x-admin-secret'];
-
-    if (!username || !password) {
-        return respond.error(res, { status: 400, message: 'Username and password are required' });
-    }
-
-    if (adminSecret !== process.env.ADMIN_SECRET) {
-        return respond.error(res, { status: 403, message: 'Invalid admin secret' });
-    }
-
-    try {
-        const user = await authService.createUser(username, password, 'admin');
-        return respond.success(res, {
-            status: 201,
-            message: 'Admin account created successfully',
-            data: { user }
-        });
-    } catch (err) {
-        if (err.code === '23505') {
-            return respond.error(res, { status: 400, message: 'Username already exists' });
-        }
-        console.error(err);
-        return respond.error(res, { status: 500, message: 'Internal server error' });
-    }
-}
 
 /**
  * Handle user login
@@ -106,4 +76,4 @@ async function refresh(req, res) {
     }
 }
 
-module.exports = { signup, adminSignup, login, refresh };
+module.exports = { signup, login, refresh };
